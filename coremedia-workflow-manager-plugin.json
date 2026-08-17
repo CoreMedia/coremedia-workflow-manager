@@ -1,0 +1,12 @@
+{
+  "$schema": "https://releases.coremedia.com/plugins/plugin-schema-3.0.0.json",
+  "plugins": {
+    "studio-server": {
+      "file": "file:////Users/fgilgen/projects/coremedia-workflow-manager/studio-server/target/studio-server.coremedia-workflow-management-plugin-1.0.0-SNAPSHOT.zip"
+    },
+    "studio-client.main": {
+      "file": "file:///Users/fgilgen/projects/coremedia-workflow-manager/studio-client/apps/main/coremedia-workflow-manager/build/studio-client.main.coremedia-workflow-manager-plugin-1.0.0-SNAPSHOT.zip"
+    }
+  },
+  "minimum-cms-version": "2404.1"
+}
