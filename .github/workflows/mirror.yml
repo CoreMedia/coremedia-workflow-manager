@@ -21,7 +21,9 @@ jobs:
       - name: Mirror repository
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SOURCE_TOKEN: ${{ github.token }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
         run: |
-          git clone --mirror https://github.com/coremedia/coremedia-workflow-manager.git repo.git
+          git clone --mirror https://x-access-token:${SOURCE_TOKEN}@github.com/${SOURCE_REPOSITORY}.git repo.git
           cd repo.git
           git push --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git
