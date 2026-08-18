@@ -24,4 +24,4 @@ jobs:
         run: |
           git clone --mirror https://github.com/coremedia/coremedia-workflow-manager.git repo.git
           cd repo.git
-          git push --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager
+          git push --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git
