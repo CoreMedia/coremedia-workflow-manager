@@ -1,4 +1,4 @@
-name: Mirror to coremedia-contribution
+name: Mirror to coremedia-contributions
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
         with:
           client-id: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_ID }}
           private-key: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_KEY }}
-          owner: coremedia-contribution
+          owner: coremedia-contributions
           repositories: coremedia-workflow-manager
 
       - name: Mirror repository
