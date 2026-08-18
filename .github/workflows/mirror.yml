@@ -23,16 +23,14 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_ID }}
+          client-id: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_CLIENT_ID }}
           private-key: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_KEY }}
           owner: coremedia-contributions
           repositories: coremedia-workflow-manager
 
       - name: Mirror repository
         env:
-          # Token zum LESEN des Quell-Repos (CoreMedia-Org) – vom Runner bereitgestellt
           SRC_TOKEN: ${{ github.token }}
-          # App-Token zum SCHREIBEN ins Ziel-Repo (coremedia-contributions)
           DST_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
@@ -44,12 +42,15 @@ jobs:
           git clone --mirror "${SRC_URL}" repo.git
           cd repo.git
 
-          # GitHub-eigene, read-only Refs entfernen, damit sie nicht gepusht werden:
-          #   refs/pull/*        -> Pull-Request-Refs (nicht pushbar)
-          #   refs/*/merge etc.  -> interne Refs
-          git for-each-ref --format='%(refname)' 'refs/pull/*' \
-            | while read -r ref; do git update-ref -d "$ref"; done
+          # WICHTIG: Mirror-Flag entfernen, sonst pusht 'git push' trotzdem ALLE Refs
+          # (inkl. der read-only refs/pull/*), was GitHub ablehnt.
+          git config --unset remote.origin.mirror || true
 
-          # Mirror-Push: überträgt Branches + Tags 1:1 und pruned im Ziel,
-          # was in der Quelle nicht (mehr) existiert.
-          git push --mirror "${DST_URL}"
+          # GitHub-eigene, read-only Refs lokal löschen
+          git for-each-ref --format='delete %(refname)' 'refs/pull/*' \
+            | git update-ref --stdin || true
+
+          # Nur echte Branches und Tags spiegeln, mit Prune fürs Aufräumen im Ziel.
+          git push --prune "${DST_URL}" \
+            'refs/heads/*:refs/heads/*' \
+            'refs/tags/*:refs/tags/*'
