@@ -1,0 +1,27 @@
+name: Mirror to coremedia-contribution
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_ID }}
+          private-key: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_KEY }}
+          owner: coremedia-contribution
+          repositories: coremedia-workflow-manager
+
+      - name: Mirror repository
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git clone --mirror https://github.com/coremedia/coremedia-workflow-manager.git repo.git
+          cd repo.git
+          git push --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager
