@@ -17,11 +17,11 @@ jobs:
           private-key: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_KEY }}
           owner: coremedia-contributions
           repositories: coremedia-workflow-manager
-
-      - name: Mirror repository
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          git clone --mirror https://github.com/coremedia/coremedia-workflow-manager.git repo.git
-          cd repo.git
-          git push --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git
+- name: Mirror repository
+  env:
+    GH_TOKEN: ${{ steps.app-token.outputs.token }}
+  run: |
+    git clone --mirror https://github.com/coremedia/coremedia-workflow-manager.git repo.git
+    cd repo.git
+    git push --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git
+    git push https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git --prune 'refs/pull/*' || true
