@@ -2,28 +2,54 @@ name: Mirror to coremedia-contributions
 
 on:
   push:
+    branches:
+      - '**'
+    tags:
+      - '**'
   workflow_dispatch:
+
+concurrency:
+  group: mirror-to-contributions
+  cancel-in-progress: false
 
 jobs:
   mirror:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-      - name: Create GitHub App token
+      - name: Create GitHub App token (Ziel-Org)
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          client-id: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_ID }}
+          app-id: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_ID }}
           private-key: ${{ secrets.MIRROR_CM_2_CM_CONTRIBUTIONS_APP_KEY }}
           owner: coremedia-contributions
           repositories: coremedia-workflow-manager
 
       - name: Mirror repository
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          # Token zum LESEN des Quell-Repos (CoreMedia-Org) – vom Runner bereitgestellt
+          SRC_TOKEN: ${{ github.token }}
+          # App-Token zum SCHREIBEN ins Ziel-Repo (coremedia-contributions)
+          DST_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
-          git clone --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia/coremedia-workflow-manager.git repo.git
+
+          SRC_URL="https://x-access-token:${SRC_TOKEN}@github.com/CoreMedia/coremedia-workflow-manager.git"
+          DST_URL="https://x-access-token:${DST_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git"
+
+          # Bare-Mirror-Clone der Quelle
+          git clone --mirror "${SRC_URL}" repo.git
           cd repo.git
-          git push --mirror https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git
-          git push https://x-access-token:${GH_TOKEN}@github.com/coremedia-contributions/coremedia-workflow-manager.git --prune 'refs/pull/*' || true
+
+          # GitHub-eigene, read-only Refs entfernen, damit sie nicht gepusht werden:
+          #   refs/pull/*        -> Pull-Request-Refs (nicht pushbar)
+          #   refs/*/merge etc.  -> interne Refs
+          git for-each-ref --format='%(refname)' 'refs/pull/*' \
+            | while read -r ref; do git update-ref -d "$ref"; done
+
+          # Mirror-Push: überträgt Branches + Tags 1:1 und pruned im Ziel,
+          # was in der Quelle nicht (mehr) existiert.
+          git push --mirror "${DST_URL}"
