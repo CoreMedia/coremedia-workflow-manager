@@ -10,4 +10,25 @@ module.exports = {
       },
     ],
   },
+  appManifests:{
+    en:{
+      categories:[
+        "Content"
+      ],
+      cmServiceShortcuts:[
+        {
+          cmKey: "diorWorkflowGrid",
+          cmOrder: 40,
+          cmCategory: "Content",
+          name: "Workflow Management",
+          url: "",
+          cmAdministrative: false,
+          cmService: {
+            name: "launchSubAppService",
+            method: "launchSubApp",
+          },
+        },
+      ]
+    }
+  }
 };
