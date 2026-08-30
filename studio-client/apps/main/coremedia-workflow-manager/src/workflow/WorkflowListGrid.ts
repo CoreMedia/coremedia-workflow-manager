@@ -11,7 +11,7 @@ interface WorkflowListGridConfig extends Config<Panel> {
 
 class WorkflowListGrid extends Panel {
   declare Config: WorkflowListGridConfig;
-  static readonly WORKFLOW_NAMES = "workflowmanager/categories";
+  static readonly WORKFLOW_NAMES = "plugins/studio-server.coremedia-workflow-management-plugin/workflowmanager/categories";
   static override readonly xtype: string = "com.coremedia.studio.dior.ecommerce.workflowListGrid.config";
 
   constructor(config: Config<WorkflowListGrid> = null) {

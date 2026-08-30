@@ -43,6 +43,18 @@
       <version>2512.0.2</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>common.plugin-base</artifactId>
+      <version>2512.1.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>common.beans-for-plugins-container</artifactId>
+      <version>2512.1.1</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>

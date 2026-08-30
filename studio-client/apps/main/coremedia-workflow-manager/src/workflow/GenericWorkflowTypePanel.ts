@@ -193,7 +193,7 @@ export default class GenericWorkflowTypePanel extends GridPanel {
 
   private fetchWorkflows(reset: boolean) {
     const cmp: TextField = this.down("[itemId=filterItemID]") as TextField;
-    const uri = "workflowmanager/processesByName/" + this.getTitle();
+    const uri = "plugins/studio-server.coremedia-workflow-management-plugin/workflowmanager/processesByName/" + this.getTitle();
     new RemoteServiceMethod(uri, "POST", true).request({
       filter: !reset ? cmp.getValue() : ""
     }).then((result: any) => {

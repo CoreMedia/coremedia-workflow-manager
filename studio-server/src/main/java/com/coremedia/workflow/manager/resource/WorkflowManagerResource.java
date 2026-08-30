@@ -2,22 +2,23 @@ package com.coremedia.workflow.manager.resource;
 
 import com.coremedia.cap.workflow.Process;
 import com.coremedia.cap.workflow.WorkflowRepository;
+import com.coremedia.cms.common.plugins.plugin_base.PluginRestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-@RequestMapping(value = "workflowmanager", produces = "application/json")
+
 @RestController
-public class WorkflowManagerPluginResource {
+public class WorkflowManagerResource implements PluginRestController {
 
   public static final String FILTER = "filter";
-  public static final String CATEGORIES = "/categories";
-  public static final String PROCESSES_BY_NAME_NAME = "/processesByName/{name}";
+  public static final String CATEGORIES = "/workflowmanager/categories";
+  public static final String PROCESSES_BY_NAME_NAME = "/workflowmanager/processesByName/{name}";
   WorkflowRepository workflowRepository;
 
-  public WorkflowManagerPluginResource(WorkflowRepository workflowRepository) {
+  public WorkflowManagerResource(WorkflowRepository workflowRepository) {
     this.workflowRepository = workflowRepository;
   }
 
