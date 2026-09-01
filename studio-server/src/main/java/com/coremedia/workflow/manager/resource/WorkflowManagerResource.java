@@ -5,6 +5,7 @@ import com.coremedia.cap.workflow.WorkflowRepository;
 import com.coremedia.cms.common.plugins.plugin_base.PluginRestController;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -18,6 +19,7 @@ public class WorkflowManagerResource implements PluginRestController {
   public static final String CATEGORIES = "/workflowmanager/categories";
   public static final String PROCESSES_BY_NAME_NAME = "/workflowmanager/processesByName/{name}";
   private static final List<String> EXCLUDED_WORKFLOW_NAME_PARTS = List.of("sync", "trans", "pub");
+  private static final List<String> WFS_CATEGORIES = List.of("Translation", "Publication", "Synchronization");
   WorkflowRepository workflowRepository;
 
   public WorkflowManagerResource(WorkflowRepository workflowRepository) {
@@ -26,9 +28,11 @@ public class WorkflowManagerResource implements PluginRestController {
 
   @GetMapping(CATEGORIES)
   public List<String> workflowCategories() {
-    return workflowRepository.getProcessDefinitionsByName().keySet().stream()
-            .filter(this::isApplicableWorkflowName)
-            .toList();
+    List<String> categoryList = new ArrayList<>(WFS_CATEGORIES);
+    categoryList.addAll(workflowRepository.getProcessDefinitionsByName().keySet().stream()
+      .filter(this::isApplicableWorkflowName)
+      .toList());
+    return categoryList;
   }
 
   @PostMapping(PROCESSES_BY_NAME_NAME)
@@ -36,7 +40,7 @@ public class WorkflowManagerResource implements PluginRestController {
     String filter = (String) body.get(FILTER);
     return getWorkflowsFiltered((p) -> {
       String defName = p.getDefinition().getName();
-      return defName.equals(name) && (filter.isEmpty() || p.getId().contains(filter));
+      return defName.toLowerCase(Locale.ROOT).contains(name) && (filter.isEmpty() || p.getId().contains(filter));
     }, !filter.isEmpty() ? 200 : 100);
   }
 

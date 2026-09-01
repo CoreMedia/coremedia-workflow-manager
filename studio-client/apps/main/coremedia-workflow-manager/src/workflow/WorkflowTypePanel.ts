@@ -23,7 +23,7 @@ interface GenericWorkflowTypePanelConfig extends Config<GridPanel> {
 
 export default class WorkflowTypePanel extends GridPanel {
   private readonly cat_mappings: string[] = ["trans", "pub", "sync"];
-
+  private static BASE_URI:string = "plugins/studio-server.coremedia-workflow-management-plugin/workflowmanager/processesByName/"
   declare Config: GenericWorkflowTypePanelConfig;
   private genericWorkflowValueExpression: ValueExpression;
   private selectedItemsExpression: ValueExpression;
@@ -58,13 +58,14 @@ export default class WorkflowTypePanel extends GridPanel {
                 }
               }),
               Config(LocalComboBox, {
-                width: 400,
+                width: 300,
                 valueField: "label",
                 displayField: "label",
                 value: "Translation",
                 listeners: {
                   change: (field, value) => {
-                    let category: string = (value as string).toLocaleLowerCase();
+                    value = value==null? "" : value;
+                    let category: string = (value as string).toLowerCase();
                     let filtered = this.cat_mappings.filter((e) => category.indexOf(e) !== -1);
                     category = filtered.length > 0 ? filtered[0] : category;
                     this.getSelectedCategoryExpression().setValue(category);
@@ -235,7 +236,7 @@ export default class WorkflowTypePanel extends GridPanel {
 
   private fetchWorkflows(reset: boolean) {
     const cmp: TextField = this.down("[itemId=filterItemID]") as TextField;
-    const uri = "plugins/studio-server.coremedia-workflow-management-plugin/workflowmanager/processesByName/" + this.getSelectedCategoryExpression().getValue();
+    const uri = WorkflowTypePanel.BASE_URI + this.getSelectedCategoryExpression().getValue();
     new RemoteServiceMethod(uri, "POST", true).request({
       filter: !reset ? cmp.getValue() : ""
     }).then((result: any) => {
