@@ -14,7 +14,7 @@ The master branch of this project is suitable for CoreMedia versions since 2512.
 It is based on the plugin architecture.
 
 ## Documentation & Tutorial
-* **[Documentation](docs/README.md)**
+* **[Documentation](documentation/README.md)**
   
   for guides for editors, administrators and developers
 * **[Issues](https://github.com/CoreMedia/content-hub-adapter-dropbox/issues)**
