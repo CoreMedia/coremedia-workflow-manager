@@ -17,7 +17,7 @@ public class WorkflowManagerResource implements PluginRestController {
   public static final String FILTER = "filter";
   public static final String CATEGORIES = "/workflowmanager/categories";
   public static final String PROCESSES_BY_NAME_NAME = "/workflowmanager/processesByName/{name}";
-  private static final List<String> EXCLUDED_WORKFLOW_NAME_PARTS = List.of("sync", "trans");
+  private static final List<String> EXCLUDED_WORKFLOW_NAME_PARTS = List.of("sync", "trans", "pub");
   WorkflowRepository workflowRepository;
 
   public WorkflowManagerResource(WorkflowRepository workflowRepository) {
