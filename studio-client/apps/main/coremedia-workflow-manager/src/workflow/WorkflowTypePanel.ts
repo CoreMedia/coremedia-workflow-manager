@@ -15,19 +15,24 @@ import MessageBoxUtil from "@coremedia/studio-client.ext.ui-components/messagebo
 import BindSelectionPlugin from "@coremedia/studio-client.ext.ui-components/plugins/BindSelectionPlugin";
 import TextField from "@jangaroo/ext-ts/form/field/Text";
 import RemoteServiceMethod from "@coremedia/studio-client.client-core/data/impl/RemoteServiceMethod";
+import LocalComboBox from "@coremedia/studio-client.ext.ui-components/components/LocalComboBox";
 
 interface GenericWorkflowTypePanelConfig extends Config<GridPanel> {
+  categories: Array<string>
 }
 
-export default class GenericWorkflowTypePanel extends GridPanel {
+export default class WorkflowTypePanel extends GridPanel {
+  private readonly cat_mappings: string[] = ["trans", "pub", "sync"];
 
   declare Config: GenericWorkflowTypePanelConfig;
   private genericWorkflowValueExpression: ValueExpression;
   private selectedItemsExpression: ValueExpression;
+  private selectedCategory: ValueExpression;
 
-  constructor(config: Config<GenericWorkflowTypePanel> = null) {
+  constructor(config: Config<WorkflowTypePanel> = null) {
     super(((): any => {
-      return ConfigUtils.apply(Config(GenericWorkflowTypePanel, {
+      return ConfigUtils.apply(Config(WorkflowTypePanel, {
+          categories: [],
           title: "genericPanel",
           flex: 1,
           height: 400,
@@ -51,6 +56,34 @@ export default class GenericWorkflowTypePanel extends GridPanel {
                 handler: () => {
                   this.fetchWorkflows(true);
                 }
+              }),
+              Config(LocalComboBox, {
+                width: 400,
+                valueField: "label",
+                displayField: "label",
+                value: "Translation",
+                listeners: {
+                  change: (field, value) => {
+                    let category: string = (value as string).toLocaleLowerCase();
+                    let filtered = this.cat_mappings.filter((e) => category.indexOf(e) !== -1);
+                    category = filtered.length > 0 ? filtered[0] : category;
+                    this.getSelectedCategoryExpression().setValue(category);
+                    this.fetchWorkflows(true);
+                  }
+                },
+                plugins: [
+                  Config(BindListPlugin, {
+                    bindTo: ValueExpressionFactory.createFromValue(config.categories.map(c => {
+                      return {label: c}
+                    })),
+                    ifUndefined: [],
+                    sortField: "label",
+                    sortDirection: "ASC",
+                    fields: [
+                      Config(DataField, {name: "label"})
+                    ],
+                  }),
+                ]
               }),
               Config(TextField, {
                 itemId: "filterItemID",
@@ -186,14 +219,23 @@ export default class GenericWorkflowTypePanel extends GridPanel {
   private deleteWorkflows() {
     MessageBoxUtil.showDecision("Delete workflow", "Do you like to delete the selected workflow", "yes", () => {
       this.getSelectedItemsExpression().getValue().forEach((process: any) => {
-        process.process.abort();
+        (process.process as Process).abort().then(()=>{
+          this.fetchWorkflows(true);
+        });
       });
     })
   }
 
+  private getSelectedCategoryExpression(): ValueExpression {
+    if (!this.selectedCategory) {
+      this.selectedCategory = ValueExpressionFactory.createFromValue("trans");
+    }
+    return this.selectedCategory;
+  }
+
   private fetchWorkflows(reset: boolean) {
     const cmp: TextField = this.down("[itemId=filterItemID]") as TextField;
-    const uri = "plugins/studio-server.coremedia-workflow-management-plugin/workflowmanager/processesByName/" + this.getTitle();
+    const uri = "plugins/studio-server.coremedia-workflow-management-plugin/workflowmanager/processesByName/" + this.getSelectedCategoryExpression().getValue();
     new RemoteServiceMethod(uri, "POST", true).request({
       filter: !reset ? cmp.getValue() : ""
     }).then((result: any) => {
@@ -201,19 +243,21 @@ export default class GenericWorkflowTypePanel extends GridPanel {
       Promise.all(items.map((item: Process) => {
         return item.load()
       })).then((processes: Array<Process>) => {
-        this.getWorkflowExpression().setValue(processes.map((process => mapProcessToObject(process))));
+        this.getWorkflowExpression().setValue(processes.map((process => this.mapProcessToObject(process))));
       })
     });
   }
-}
 
-function mapProcessToObject(process: Process): any {
-  return {
-    "id": process.getId().replace("coremedia:///cap/process/", ""),
-    "name": process.getDefinition().getName(),
-    "state": process.getProcessState().name,
-    "startDate": process.getCreationDate().toString(),
-    "owner": process.getOwner().getName(),
-    "process": process
+  private mapProcessToObject(process: Process): any {
+    return {
+      "id": process.getId().replace("coremedia:///cap/process/", ""),
+      "name": process.getDefinition().getName(),
+      "state": process.getProcessState().name,
+      "startDate": process.getCreationDate().toString(),
+      "owner": process.getOwner().getName(),
+      "process": process
+    }
   }
 }
+
+

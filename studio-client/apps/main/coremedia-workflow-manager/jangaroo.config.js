@@ -7,6 +7,12 @@ module.exports = {
       {
         mainClass: "com.coremedia.plugins.workflow.manager.WorkflowManagerStudioPlugin",
         name: "Studio workflow manager Plugin",
+        requiredGroup: "administratoren@cognito"
+      },
+      {
+        mainClass: "com.coremedia.plugins.workflow.manager.WorkflowManagerStudioPlugin",
+        name: "Studio workflow manager Plugin",
+        requiredGroup: "administratoren"
       },
     ],
   },

@@ -3,7 +3,7 @@ import Config from "@jangaroo/runtime/Config";
 import ConfigUtils from "@jangaroo/runtime/ConfigUtils";
 import beanFactory from "@coremedia/studio-client.client-core/data/beanFactory";
 import RemoteBean from "@coremedia/studio-client.client-core/data/RemoteBean";
-import GenericWorkflowTypePanel from "./GenericWorkflowTypePanel";
+import WorkflowTypePanel from "./WorkflowTypePanel";
 import PanelSkin from "@coremedia/studio-client.ext.ui-components/skins/PanelSkin";
 
 interface WorkflowListGridConfig extends Config<Panel> {
@@ -17,13 +17,6 @@ class WorkflowListGrid extends Panel {
   constructor(config: Config<WorkflowListGrid> = null) {
 
     super(ConfigUtils.apply(Config(WorkflowListGrid, {
-      layout: {
-        type: "column",
-      },
-      defaults: {
-        columnWidth: 0.5,
-        margin: "10 10 0 0",
-      },
       ui: PanelSkin.DEFAULT.getSkin(),
       scrollable: true,
       border: false,
@@ -33,17 +26,13 @@ class WorkflowListGrid extends Panel {
   }
 
   private fetchApplicableDefinitions() {
-    const that = this;
-
     beanFactory._.getRemoteBean(WorkflowListGrid.WORKFLOW_NAMES).load().then((result: RemoteBean) => {
-      const workflowNames: Array<string> = result.toObject().items || [];
-      that.removeAll();
-
-      workflowNames.forEach((name: string) => {
-        that.add(new GenericWorkflowTypePanel({
-          title: name,
-        }))
-      })
+      const workflowCategories: Array<string> = result.toObject().items || [];
+      this.removeAll();
+      this.add(new WorkflowTypePanel({
+        title: "Workflow selection",
+        categories: workflowCategories
+      }));
     });
   }
 
