@@ -9,6 +9,8 @@ import ConfigUtils from "@jangaroo/runtime/ConfigUtils";
 import IEditorContext from "@coremedia/studio-client.main.editor-components/sdk/IEditorContext";
 import {studioAppsContext} from "@coremedia/studio-client.app-context-models";
 import OpenWorkflowGridAction from "./workflow/OpenWorkflowGridAction";
+import ConfigureDashboardPlugin from "@coremedia/studio-client.main.editor-components/sdk/dashboard/ConfigureDashboardPlugin";
+import WorkflowManagerWidgetType from "./workflow/WorkflowManagerWidgetType";
 
 export default class WorkflowManagerStudioPlugin extends StudioPlugin {
   static readonly xtype: string = "com.coremedia.plugins.workflow.manager.workflowManagerStudioPluginConfig";
@@ -32,7 +34,15 @@ export default class WorkflowManagerStudioPlugin extends StudioPlugin {
               }),
             ],
           }),
-        ]
+        ],
+        configuration: [
+          new ConfigureDashboardPlugin({
+            widgets: [],
+            types: [
+              new WorkflowManagerWidgetType({}),
+            ],
+          }),
+        ],
       });
     })());
   }
