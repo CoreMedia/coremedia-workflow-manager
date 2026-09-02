@@ -42,7 +42,7 @@ jobs:
 
       - name: Set up PNPM
         run: |
-          echo "NPM_CONFIG_//repository.coremedia.com/nexus/repository/coremedia-npm/:_auth=${{ github.token }}" >> $GITHUB_ENV
+          echo "NPM_CONFIG_//repository.coremedia.com/nexus/repository/coremedia-npm/:_auth=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
           npm install -g pnpm@11.15.1
 
       - name: Setup Git
