@@ -42,7 +42,7 @@ jobs:
 
       - name: Set up PNPM
         run: |
-          echo "NPM_CONFIG_//repository.coremedia.com/nexus/repository/coremedia-npm/:_auth=${{ secrets.FGI_GITHUB_SECRET }}" >> $GITHUB_ENV
+          echo "npm_config_//repository.coremedia.com/nexus/repository/coremedia-npm/:_auth=${{ secrets.FGI_GITHUB_SECRET }}" >> $GITHUB_ENV
           npm install -g pnpm@11.15.1
 
       - name: Setup Git
@@ -54,8 +54,8 @@ jobs:
       - name: Install PNPM Dependencies
         working-directory: studio-client
         env:
-          NPM_CONFIG_@coremedia:registry: 'https://repository.coremedia.com/nexus/repository/coremedia-npm/'
-          NPM_CONFIG_@jangaroo:registry: 'https://repository.coremedia.com/nexus/repository/coremedia-npm/'
+          npm_config_@coremedia:registry: 'https://repository.coremedia.com/nexus/repository/coremedia-npm/'
+          npm_config_@jangaroo:registry: 'https://repository.coremedia.com/nexus/repository/coremedia-npm/'
         run: pnpm install
 
       - name: Set Release Version
