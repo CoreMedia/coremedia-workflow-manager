@@ -56,7 +56,10 @@ jobs:
         env:
           npm_config_@coremedia:registry: 'https://repository.coremedia.com/nexus/repository/coremedia-npm/'
           npm_config_@jangaroo:registry: 'https://repository.coremedia.com/nexus/repository/coremedia-npm/'
-        run: pnpm install
+        run: |
+          pnpm config set @coremedia:registry https://repository.coremedia.com/nexus/repository/coremedia-npm/
+          pnpm config set @jangaroo:registry https://repository.coremedia.com/nexus/repository/coremedia-npm/
+          pnpm install
 
       - name: Set Release Version
         id: set-release-version
