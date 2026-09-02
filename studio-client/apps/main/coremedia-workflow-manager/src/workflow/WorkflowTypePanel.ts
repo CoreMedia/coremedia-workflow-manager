@@ -14,9 +14,8 @@ import {reload, trashBin} from "@coremedia/studio-client.common-icons";
 import MessageBoxUtil from "@coremedia/studio-client.ext.ui-components/messagebox/MessageBoxUtil";
 import BindSelectionPlugin from "@coremedia/studio-client.ext.ui-components/plugins/BindSelectionPlugin";
 import TextField from "@jangaroo/ext-ts/form/field/Text";
-import RemoteServiceMethod from "@coremedia/studio-client.client-core/data/impl/RemoteServiceMethod";
 import LocalComboBox from "@coremedia/studio-client.ext.ui-components/components/LocalComboBox";
-
+import RemoteServiceMethod from "@coremedia/studio-client.client-core-impl/data/impl/RemoteServiceMethod";
 interface GenericWorkflowTypePanelConfig extends Config<GridPanel> {
   categories: Array<string>
 }
