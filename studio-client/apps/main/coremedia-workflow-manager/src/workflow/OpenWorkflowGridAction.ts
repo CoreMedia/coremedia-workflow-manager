@@ -21,7 +21,7 @@ export default class OpenWorkflowGridAction extends Action {
 
   private static handleOpen(): void {
     const workArea = as(editorContext._.getWorkArea(), WorkArea);
-    const workflowGridTab = as(Ext.getCmp("workflowListGridTab"), WorkflowListGrid);
+    const workflowGridTab = as(Ext.getCmp("workflowListGridTabID"), WorkflowListGrid);
 
     if (!workflowGridTab) {
       const workAreaTabType = workArea.getTabTypeById(WorkflowListGrid.xtype);

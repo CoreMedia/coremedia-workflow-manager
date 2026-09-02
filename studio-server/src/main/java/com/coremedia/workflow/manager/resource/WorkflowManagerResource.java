@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.Locale;
 
 
 @RestController
@@ -22,7 +22,7 @@ public class WorkflowManagerResource implements PluginRestController {
   private static final List<String> WFS_CATEGORIES = List.of("Translation", "Publication", "Synchronization");
   WorkflowRepository workflowRepository;
 
-  public WorkflowManagerResource(WorkflowRepository workflowRepository) {
+  public WorkflowManagerResource(@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") WorkflowRepository workflowRepository) {
     this.workflowRepository = workflowRepository;
   }
 
@@ -36,7 +36,7 @@ public class WorkflowManagerResource implements PluginRestController {
   }
 
   @PostMapping(PROCESSES_BY_NAME_NAME)
-  public List<Process> getRunningProcessesByName(@PathVariable("name") String name, @RequestBody Map body) {
+  public List<Process> getRunningProcessesByName(@PathVariable("name") String name, @RequestBody Map<String, String> body) {
     String filter = (String) body.get(FILTER);
     return getWorkflowsFiltered((p) -> {
       String defName = p.getDefinition().getName();
@@ -45,7 +45,12 @@ public class WorkflowManagerResource implements PluginRestController {
   }
 
   private List<Process> getWorkflowsFiltered(Predicate<Process> predicate, int limit) {
-    return workflowRepository.getProcesses().stream().filter(predicate).limit(limit).toList();
+    return workflowRepository
+      .getProcesses()
+      .stream()
+      .filter(p -> !p.isAborted() && !p.isDestroyed())
+      .filter(predicate)
+      .limit(limit).toList();
   }
 
   private boolean isApplicableWorkflowName(String workflowName) {

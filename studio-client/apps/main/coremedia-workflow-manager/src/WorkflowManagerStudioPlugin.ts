@@ -25,8 +25,10 @@ export default class WorkflowManagerStudioPlugin extends StudioPlugin {
                 tabTypes: [
                   new ComponentBasedWorkAreaTabType({
                     tabComponent: Config(WorkflowListGrid, {
+                      id:"workflowListGridTabID",
                       itemId: "workflowListGridTab",
                       title: "Workflows",
+                      height:"100%",
                       closable: true,
                     }),
                   }),
@@ -47,9 +49,7 @@ export default class WorkflowManagerStudioPlugin extends StudioPlugin {
     })());
   }
 
-
   override init(editorContext: IEditorContext): void  {
-
     studioAppsContext._.getShortcutRunnerRegistry().registerShortcutRunner("diorWorkflowGrid", (): void => {
       const openWorkflowGridAction = new OpenWorkflowGridAction({});
       console.log("[diorWorkflowGrid] opening Tab");
