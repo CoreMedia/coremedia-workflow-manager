@@ -17,10 +17,5 @@
   },
   "scripts": {
     "set-version": "set-version"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@coremedia/plugin-manager"
-    ]
   }
 }

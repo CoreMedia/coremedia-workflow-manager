@@ -21,11 +21,9 @@
     "@coremedia/studio-client.tracking-service": "^2512.0.0",
     "@coremedia/studio-client.user-consent-service": "^2512.0.0",
     "@jangaroo/ext-ts": "^2.0.0",
-    "@jangaroo/runtime": "^3.0.0",
-    "rxjs": "^7.8.1"
+    "@jangaroo/runtime": "^3.0.0"
   },
   "devDependencies": {
-    "@coremedia/plugin-manager": "^2.0.0",
     "@jangaroo/build": "^3.0.2",
     "@jangaroo/core": "^3.0.2",
     "@jangaroo/publish": "^3.0.2",
