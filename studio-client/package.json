@@ -3,8 +3,8 @@
   "version": "1.0.0-SNAPSHOT",
   "private": true,
   "engines": {
-    "node": "22 || 24",
-    "pnpm": "^10.18"
+    "node": "^24.18.0",
+    "pnpm": "^11.15.1"
   },
   "devDependencies": {
     "@coremedia/set-version": "^1.2.0",
