@@ -1,2 +1,7 @@
 packages:
   - "apps/main/coremedia-workflow-manager"
+allowBuilds:
+  '@coremedia/plugin-manager': set this to true or false
+"onlyBuiltDependencies":
+  - "@coremedia/plugin-manager"
+
