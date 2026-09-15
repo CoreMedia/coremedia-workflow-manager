@@ -28,7 +28,7 @@ export default class WorkflowManagerStudioPlugin extends StudioPlugin {
                       id:"workflowListGridTabID",
                       itemId: "workflowListGridTab",
                       title: "Workflows",
-                      height:"100%",
+                      height:"600",
                       closable: true,
                     }),
                   }),

@@ -23,3 +23,7 @@ The Picture below is showing the implementation as Panel
 And as second, the dashboad.
 ![Image1: Studio appearance as dashboard widget](img/wmdashboard.png)
 
+This plugin is offering the ability to delete workflows. Per design, multi-selection is possible. On the upper left,
+two buttons are displayed. The first button is to start the deletion, the second for updating the list of running processes
+per workflow, or workflow category. 
+Next to the refresh button, the workflow selection (Combobox) is rendered, and at last, a filter field for a given id.

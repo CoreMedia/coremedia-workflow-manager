@@ -34,10 +34,9 @@ export default class WorkflowTypePanel extends GridPanel {
           categories: [],
           title: "genericPanel",
           flex: 1,
-          height: 400,
           scrollable: true,
           multiSelect: true,
-          ui: PanelSkin.CARD_200.getSkin(),
+          ui: PanelSkin.CARD.getSkin(),
           tbar: Config(Toolbar, {
             items: [
               Config(IconButton, {
@@ -107,13 +106,12 @@ export default class WorkflowTypePanel extends GridPanel {
               height: "50",
               dataIndex: "id",
               text: "ID",
-              width: 100,
-              flex: 0,
+              flex: 1,
             },
             {
               dataIndex: "name",
               text: "Workflow Name",
-              flex: 1,
+              flex: 2,
               sortable: true,
             },
             {
@@ -123,20 +121,20 @@ export default class WorkflowTypePanel extends GridPanel {
             {
               dataIndex: "state",
               text: "State",
-              width: 100,
+              flex: 1,
               sortable: true,
               renderer: this.renderState.bind(this),
             },
             {
               dataIndex: "owner",
               text: "Assignee",
-              width: 150,
+              flex: 1,
               sortable: true,
             },
             {
               dataIndex: "startDate",
               text: "Start Date",
-              width: 200,
+              flex: 1,
               sortable: true,
               renderer: this.renderDate.bind(this),
             },
@@ -253,7 +251,7 @@ export default class WorkflowTypePanel extends GridPanel {
       "id": process.getId().replace("coremedia:///cap/process/", ""),
       "name": process.getDefinition().getName(),
       "state": process.getProcessState().name,
-      "startDate": process.getCreationDate().toString(),
+      "startDate": process.getCreationDate(),
       "owner": process.getOwner().getName(),
       "process": process
     }
