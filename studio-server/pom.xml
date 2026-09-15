@@ -5,7 +5,7 @@
 
   <groupId>com.coremedia.plugins</groupId>
   <artifactId>studio-server.coremedia-workflow-management-plugin</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>coremedia-plugin</packaging>
 
   <properties>
