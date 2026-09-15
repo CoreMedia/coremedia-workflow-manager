@@ -8,5 +8,5 @@
       "file": "studio-client/apps/main/coremedia-workflow-manager/build/studio-client.main.coremedia-workflow-manager-plugin-${VERSION}.zip"
     }
   },
-  "minimum-cms-version": "2404.1"
+  "minimum-cms-version": "2406.2"
 }
