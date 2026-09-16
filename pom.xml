@@ -6,7 +6,7 @@
 
   <groupId>com.coremedia.plugins</groupId>
   <artifactId>coremedia-workflow-management-plugin</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>CoreMedia workflow management plugin</description>
 
