@@ -5,6 +5,7 @@ import beanFactory from "@coremedia/studio-client.client-core/data/beanFactory";
 import RemoteBean from "@coremedia/studio-client.client-core/data/RemoteBean";
 import WorkflowTypePanel from "./WorkflowTypePanel";
 import PanelSkin from "@coremedia/studio-client.ext.ui-components/skins/PanelSkin";
+import WorkflowManagerStudioPlugin_properties from "../WorkflowManagerStudioPlugin_properties";
 
 interface WorkflowListGridConfig extends Config<Panel> {
 }
@@ -30,7 +31,7 @@ class WorkflowListGrid extends Panel {
       const workflowCategories: Array<string> = result.toObject().items || [];
       this.removeAll();
       this.add(new WorkflowTypePanel({
-        title: "Workflow selection",
+      title: WorkflowManagerStudioPlugin_properties.workflowmanager_workflow_selection_title,
         categories: workflowCategories
       }));
     });
@@ -39,4 +40,3 @@ class WorkflowListGrid extends Panel {
 }
 
 export default WorkflowListGrid;
-

@@ -3,6 +3,7 @@ import Dashboard_properties from "@coremedia/studio-client.main.editor-component
 import {Config} from "@jangaroo/runtime";
 import ConfigUtils from "@jangaroo/runtime/ConfigUtils";
 import WorkflowListGrid from "./WorkflowListGrid";
+import WorkflowManagerStudioPlugin_properties from "../WorkflowManagerStudioPlugin_properties";
 
 interface WorkflowManagerWidgetTypeConfig extends Config<ComponentBasedWidgetType> {
 }
@@ -12,11 +13,11 @@ class WorkflowManagerWidgetType extends ComponentBasedWidgetType {
 
   constructor(config: Config<WorkflowManagerWidgetType> = null) {
     super(ConfigUtils.apply(Config(WorkflowManagerWidgetType, {
-      name: "Workflow Management",
-      description: "Manage running workflows",
+      name: WorkflowManagerStudioPlugin_properties.workflowmanager_widget_name,
+      description: WorkflowManagerStudioPlugin_properties.workflowmanager_widget_description,
       iconCls: Dashboard_properties.Widget_SimpleSearch_icon,
       widgetComponent: Config(WorkflowListGrid, {
-        title: "Workflows",
+        title: WorkflowManagerStudioPlugin_properties.workflowmanager_widget_title,
       }),
     }), config));
   }

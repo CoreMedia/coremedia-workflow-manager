@@ -16,6 +16,8 @@ import BindSelectionPlugin from "@coremedia/studio-client.ext.ui-components/plug
 import TextField from "@jangaroo/ext-ts/form/field/Text";
 import LocalComboBox from "@coremedia/studio-client.ext.ui-components/components/LocalComboBox";
 import RemoteServiceMethod from "@coremedia/studio-client.client-core-impl/data/impl/RemoteServiceMethod";
+import LoadMask from "@jangaroo/ext-ts/LoadMask";
+import WorkflowManagerStudioPlugin_properties from "../WorkflowManagerStudioPlugin_properties";
 interface GenericWorkflowTypePanelConfig extends Config<GridPanel> {
   categories: Array<string>
 }
@@ -32,7 +34,8 @@ export default class WorkflowTypePanel extends GridPanel {
     super(((): any => {
       return ConfigUtils.apply(Config(WorkflowTypePanel, {
           categories: [],
-          title: "genericPanel",
+          title: WorkflowManagerStudioPlugin_properties.workflowmanager_generic_panel_title,
+          minHeight: 400,
           flex: 1,
           scrollable: true,
           multiSelect: true,
@@ -41,16 +44,16 @@ export default class WorkflowTypePanel extends GridPanel {
             items: [
               Config(IconButton, {
                 iconCls: SvgIconUtil.getIconStyleClassForSvgIcon(trashBin),
-                text: "delete",
-                tooltip: "Delete selected workflows",
+                text: WorkflowManagerStudioPlugin_properties.workflowmanager_delete_text,
+                tooltip: WorkflowManagerStudioPlugin_properties.workflowmanager_delete_tooltip,
                 handler: () => {
                   this.deleteWorkflows();
                 }
               }),
               Config(IconButton, {
                 iconCls: SvgIconUtil.getIconStyleClassForSvgIcon(reload),
-                text: "reload",
-                tooltip: "Reload workflowlist",
+                text: WorkflowManagerStudioPlugin_properties.workflowmanager_reload_text,
+                tooltip: WorkflowManagerStudioPlugin_properties.workflowmanager_reload_tooltip,
                 handler: () => {
                   this.fetchWorkflows(true);
                 }
@@ -86,8 +89,8 @@ export default class WorkflowTypePanel extends GridPanel {
               }),
               Config(TextField, {
                 itemId: "filterItemID",
-                emptyText: "Filter by id",
-                ariaLabel: "Filter by id",
+                emptyText: WorkflowManagerStudioPlugin_properties.workflowmanager_filter_empty_text,
+                ariaLabel: WorkflowManagerStudioPlugin_properties.workflowmanager_filter_aria_label,
                 listeners: {
                   change: (change) => {
                     this.getStore().filterBy(record => {
@@ -105,12 +108,12 @@ export default class WorkflowTypePanel extends GridPanel {
             {
               height: "50",
               dataIndex: "id",
-              text: "ID",
+              text: WorkflowManagerStudioPlugin_properties.workflowmanager_column_id,
               flex: 1,
             },
             {
               dataIndex: "name",
-              text: "Workflow Name",
+              text: WorkflowManagerStudioPlugin_properties.workflowmanager_column_workflow_name,
               flex: 2,
               sortable: true,
             },
@@ -120,20 +123,14 @@ export default class WorkflowTypePanel extends GridPanel {
             },
             {
               dataIndex: "state",
-              text: "State",
+              text: WorkflowManagerStudioPlugin_properties.workflowmanager_column_state,
               flex: 1,
               sortable: true,
               renderer: this.renderState.bind(this),
             },
             {
-              dataIndex: "owner",
-              text: "Assignee",
-              flex: 1,
-              sortable: true,
-            },
-            {
               dataIndex: "startDate",
-              text: "Start Date",
+              text: WorkflowManagerStudioPlugin_properties.workflowmanager_column_start_date,
               flex: 1,
               sortable: true,
               renderer: this.renderDate.bind(this),
@@ -191,6 +188,7 @@ export default class WorkflowTypePanel extends GridPanel {
       "RUNNING": "<span style='color: green;'>RUNNING</span>",
       "COMPLETED": "<span style='color: blue;'>COMPLETED</span>",
       "FAILED": "<span style='color: red;'>FAILED</span>",
+      "ABORTED": "<span style='color: red;'>FAILED</span>",
       "PENDING": "<span style='color: orange;'>PENDING</span>",
       "READABLE": "<span style='color: green;'>READABLE</span>",
     };
@@ -234,15 +232,20 @@ export default class WorkflowTypePanel extends GridPanel {
   private fetchWorkflows(reset: boolean) {
     const cmp: TextField = this.down("[itemId=filterItemID]") as TextField;
     const uri = WorkflowTypePanel.BASE_URI + this.getSelectedCategoryExpression().getValue();
+    const loadMask = new LoadMask({
+      target: this,
+    });
+    loadMask.show();
     new RemoteServiceMethod(uri, "POST", true).request({
       filter: !reset ? cmp.getValue() : ""
     }).then((result: any) => {
       const items: Array<Process> = result.getResponseJSON().items;
-      Promise.all(items.map((item: Process) => {
-        return item.load()
-      })).then((processes: Array<Process>) => {
-        this.getWorkflowExpression().setValue(processes.map((process => this.mapProcessToObject(process))));
-      })
+      return Promise.all(items.map((item: Process) => item.load()));
+    }).then((processes: Array<Process>) => {
+      let mapped = processes.map((process => this.mapProcessToObject(process)));
+      this.getWorkflowExpression().setValue(mapped);
+    }).finally(() => {
+      loadMask.destroy();
     });
   }
 
@@ -252,10 +255,7 @@ export default class WorkflowTypePanel extends GridPanel {
       "name": process.getDefinition().getName(),
       "state": process.getProcessState().name,
       "startDate": process.getCreationDate(),
-      "owner": process.getOwner().getName(),
       "process": process
     }
   }
 }
-
-

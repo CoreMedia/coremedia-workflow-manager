@@ -48,6 +48,7 @@ public class WorkflowManagerResource implements PluginRestController {
     return workflowRepository
       .getProcesses()
       .stream()
+      .filter(p->workflowRepository.getAccessControl().mayAbort(p))
       .filter(p -> !p.isAborted() && !p.isDestroyed())
       .filter(predicate)
       .limit(limit).toList();

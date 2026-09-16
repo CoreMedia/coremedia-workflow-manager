@@ -14,6 +14,16 @@ module.exports = {
         name: "Studio workflow manager Plugin",
         requiredGroup: "administratoren"
       },
+      {
+        mainClass: "com.coremedia.plugins.workflow.manager.WorkflowManagerStudioPlugin",
+        name: "Studio workflow manager Plugin",
+        requiredGroup: "wf-delete@cognito"
+      },
+      {
+        mainClass: "com.coremedia.plugins.workflow.manager.WorkflowManagerStudioPlugin",
+        name: "Studio workflow manager Plugin",
+        requiredGroup: "wf-delete"
+      },
     ],
   },
   appManifests:{

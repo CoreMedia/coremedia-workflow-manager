@@ -11,6 +11,11 @@ import {studioAppsContext} from "@coremedia/studio-client.app-context-models";
 import OpenWorkflowGridAction from "./workflow/OpenWorkflowGridAction";
 import ConfigureDashboardPlugin from "@coremedia/studio-client.main.editor-components/sdk/dashboard/ConfigureDashboardPlugin";
 import WorkflowManagerWidgetType from "./workflow/WorkflowManagerWidgetType";
+import WorkflowManagerStudioPlugin_properties from "./WorkflowManagerStudioPlugin_properties";
+import CopyResourceBundleProperties
+  from "@coremedia/studio-client.main.editor-components/configuration/CopyResourceBundleProperties";
+import resourceManager from "@jangaroo/runtime/l10n/resourceManager";
+import Editor_properties from "@coremedia/studio-client.main.editor-components/Editor_properties";
 
 export default class WorkflowManagerStudioPlugin extends StudioPlugin {
   static readonly xtype: string = "com.coremedia.plugins.workflow.manager.workflowManagerStudioPluginConfig";
@@ -27,7 +32,7 @@ export default class WorkflowManagerStudioPlugin extends StudioPlugin {
                     tabComponent: Config(WorkflowListGrid, {
                       id:"workflowListGridTabID",
                       itemId: "workflowListGridTab",
-                      title: "Workflows",
+                      title: WorkflowManagerStudioPlugin_properties.workflowmanager_tab_title,
                       height:"600",
                       closable: true,
                     }),
@@ -38,6 +43,11 @@ export default class WorkflowManagerStudioPlugin extends StudioPlugin {
           }),
         ],
         configuration: [
+
+        new CopyResourceBundleProperties({
+          destination: resourceManager.getResourceBundle(null, Editor_properties),
+          source: resourceManager.getResourceBundle(null, WorkflowManagerStudioPlugin_properties),
+        }),
           new ConfigureDashboardPlugin({
             widgets: [],
             types: [
